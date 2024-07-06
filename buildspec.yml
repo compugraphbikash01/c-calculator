@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto8
+    commands:
+      - echo Installing SonarScanner
+      - curl -Lo /opt/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+      - unzip /opt/sonar-scanner.zip -d /opt/
+      - export PATH=$PATH:/opt/sonar-scanner-4.6.2.2472-linux/bin
+
+  build:
+    commands:
+      - echo "Compiling the code"
+      - gcc -o simple_calculator simple_calculator.c
+      - echo "Running SonarQube analysis"
+      - /opt/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner \
+          sonar-scanner \
+      -Dsonar.projectKey=simple-calculator \
+      -Dsonar.sources=. \
+      -Dsonar.host.url=http://54.160.122.69:9000 \
+      -Dsonar.login=79e8e62679e2c84f188b0f9e54fb8b219019e347
+artifacts:
+  files:
+    - simple_calculator
